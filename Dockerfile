@@ -1,3 +1,13 @@
+FROM node:lts-alpine
+
+ADD / /usr/app
+
+WORKDIR /usr/app
+
+# Install nodejs vendors
+RUN npm install
+RUN npm run dev
+
 FROM php:7.4-fpm
 
 # Arguments defined in docker-compose.yml
@@ -28,19 +38,13 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
+ADD / /var/www
+
 # Set working directory
 WORKDIR /var/www
 
-# Sun composer
+# Install php vendors
 RUN composer install
 RUN php artisan key:generate
-
-# Set mysql base data
-FROM mysql:5.7
-
-COPY docker-composer/mysql/init_db.sh init_db.sh 
-COPY docker-composer/mysql/init_db.sql init_db.sql
-
-RUN init_db.sh
 
 USER $user

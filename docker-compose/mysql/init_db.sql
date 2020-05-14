@@ -1,4 +1,4 @@
-OP TABLE IF EXISTS `places`;
+DROP TABLE IF EXISTS `places`;
 
 CREATE TABLE `places` (
 	  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
